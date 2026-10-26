@@ -1,0 +1,111 @@
+@startuml
+' Лабораторная работа №3, Вариант 1
+' Учёт покупок хот-догов (HunterDog, MasterDog, Berlinka)
+title Иерархия классов «Учёт хот-догов» (UML-диаграмма классов)
+
+skinparam classAttributeIconSize 0
+skinparam monochrome false
+skinparam packageStyle rectangle
+
+package "com.vvrpo.laba3.product" {
+    abstract class Product {
+        - String name
+        - double price
+        + Product(name, price)
+        + String getName()
+        + void setName(String)
+        + double getPrice()
+        + void setPrice(double)
+        + String toString()
+    }
+
+    abstract class Component {
+        + Component(name, price)
+    }
+
+    class Bun {
+        + Bun(name, price)
+    }
+
+    class Sausage {
+        + Sausage(name, price)
+    }
+
+    class Sauce {
+        + Sauce(name, price)
+    }
+
+    class Topping {
+        + Topping(name, price)
+    }
+}
+
+package "com.vvrpo.laba3.hotdog" {
+    abstract class HotDog {
+        + HotDog(name, components)
+        + List<Component> getComponents()
+        + void addComponent(Component)
+        + abstract boolean isComplete()
+        + String toString()
+    }
+
+    class HunterDog {
+        + HunterDog()
+        + boolean isComplete()
+    }
+
+    class MasterDog {
+        + MasterDog()
+        + boolean isComplete()
+    }
+
+    class Berlinka {
+        + Berlinka()
+        + boolean isComplete()
+    }
+}
+
+package "com.vvrpo.laba3.order" {
+    class Order {
+        - int id
+        - List<Product> items
+        + Order(id)
+        + void addItem(Product)
+        + List<Product> getItems()
+        + double getTotal()
+        + boolean isFull()
+        + int getItemCount()
+        + String toString()
+    }
+}
+
+package "com.vvrpo.laba3" {
+    class Main {
+        + static void main(String[])
+    }
+}
+
+' ==================== Наследование (обобщение) ====================
+Product <|-- Component
+Product <|-- HotDog
+
+Component <|-- Bun
+Component <|-- Sausage
+Component <|-- Sauce
+Component <|-- Topping
+
+HotDog <|-- HunterDog
+HotDog <|-- MasterDog
+HotDog <|-- Berlinka
+
+' ==================== Композиция / ассоциация ====================
+order "1" Order *-- "0..*" Product items : содержит
+hotdog "1" HotDog *-- "2..*" Component components : состоит из
+
+' Зависимость Main использует все классы
+Main ..> HotDog
+Main ..> Order
+Main ..> Product
+Main ..> Component
+
+@enduml
